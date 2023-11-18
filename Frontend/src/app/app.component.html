@@ -1,4 +1,4 @@
-<div *ngIf="showAddModal">
+<div *ngIf="showAddUserModal">
   <h2>Add User</h2>
   <form #userForm="ngForm" (ngSubmit)="onSubmitUser(userForm)">
     <div>
@@ -23,7 +23,7 @@
     </div>
     <div class="buttons">
       <button class="submit-button" type="submit">Submit</button>
-      <button class="cancel-button" type="button" (click)="closeAddModal()">
+      <button class="cancel-button" type="button" (click)="closeAddUserModal()">
         Cancel
       </button>
     </div>
@@ -102,76 +102,84 @@
           placeholder="Search user"
           class="search"
           [(ngModel)]="searchText"
+          (input)="onSearchUser()"
         />
-        <!-- <button class="search-enter" (click)="onSearch()">Enter</button> -->
+        <button class="search-clear" (click)="clearSearch()">Clear</button>
       </div>
-      <button class="add" (click)="openAddModal()">Add User</button>
+      <button class="add" (click)="openAddUserModal()">Add User</button>
     </div>
-    <table class="data-table" *ngIf="selectedUser && showAllData">
+
+    <table class="data-table">
       <thead>
         <tr>
           <th>Id</th>
           <th>Name</th>
           <th>Email</th>
           <th>Address</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{ selectedUser.id }}</td>
-          <td>{{ selectedUser.name }}</td>
-          <td>{{ selectedUser.email }}</td>
-          <td>
-            <ol>
-              <li *ngFor="let address of selectedUser.addresses">
-                {{ address.street }}, {{ address.city }}, {{ address.country }}
-              </li>
-            </ol>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <table class="data-table" *ngIf="showAllData && !selectedUser">
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Address</th>
-          <th>Update</th>
+          <th>Edit</th>
           <th>Delete</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users">
-          <td>{{ user.id }}</td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>
-            <ol>
-              <li *ngFor="let address of user.addresses">
-                {{ address.street }}, {{ address.city }}, {{ address.country }}
-              </li>
-            </ol>
-          </td>
-          <td>
-            <button (click)="openEditForm(user)">Edit</button>
-          </td>
-          <td>
-            <button
-              *ngIf="user.id !== null && user.id !== undefined"
-              (click)="deleteUser(user.id)"
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
+        <ng-container *ngIf="filteredUsers.length > 0; else noUsersFound">
+          <tr *ngFor="let i of filteredUsers">
+            <td>{{ i.id }}</td>
+            <td>{{ i.name }}</td>
+            <td>{{ i.email }}</td>
+            <td>
+              <ol>
+                <li *ngFor="let address of i.addresses">
+                  {{ address.street }}, {{ address.city }},
+                  {{ address.country }}
+                </li>
+              </ol>
+            </td>
+            <td><button (click)="openEditForm(i)">Edit</button></td>
+            <td>
+              <button
+                *ngIf="i.id !== null && i.id !== undefined"
+                (click)="deleteUser(i.id)"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-template #noUsersFound>
+          <tr *ngFor="let user of users">
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <ol>
+                <li *ngFor="let address of user.addresses">
+                  {{ address.street }}, {{ address.city }},
+                  {{ address.country }}
+                </li>
+              </ol>
+            </td>
+            <td>
+              <button class="edit-button" (click)="openEditForm(user)">
+                Edit
+              </button>
+            </td>
+            <td>
+              <button
+                class="delete-button"
+                *ngIf="user.id !== null && user.id !== undefined"
+                (click)="deleteUser(user.id)"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </ng-template>
       </tbody>
     </table>
   </div>
 </div>
 
-<div *ngIf="showAddModal">
+<div *ngIf="showAddAddressModal">
   <h2>Add Address</h2>
   <form #addressForm="ngForm" (ngSubmit)="onSubmitAddress(addressForm)">
     <div>
@@ -217,7 +225,11 @@
     <br />
     <div class="buttons">
       <button class="submit-button" type="submit">Submit</button>
-      <button type="button" class="cancel-button" (click)="closeAddModal()">
+      <button
+        type="button"
+        class="cancel-button"
+        (click)="closeAddAddressModal()"
+      >
         Cancel
       </button>
     </div>
@@ -279,18 +291,9 @@
 <div class="container">
   <div class="section">
     <h2>Address Table</h2>
-    <div class="header">
-      <div class="search-container">
-        <input
-          type="search"
-          placeholder="Search Address"
-          class="search"
-          [(ngModel)]="searchText"
-        />
-        <!-- <button class="search-enter" (click)="onSearchAddress()">Enter</button> -->
-      </div>
-      <button class="add" (click)="openAddModal()">Add Address</button>
-    </div>
+    <button class="addAddress" (click)="openAddAddressModal()">
+      Add Address
+    </button>
     <table class="data-table">
       <thead>
         <tr>
@@ -308,9 +311,14 @@
           <td>{{ address.street }}</td>
           <td>{{ address.city }}</td>
           <td>{{ address.country }}</td>
-          <td><button (click)="openEditAddressForm(address)">Edit</button></td>
+          <td>
+            <button class="edit-button" (click)="openEditAddressForm(address)">
+              Edit
+            </button>
+          </td>
           <td>
             <button
+              class="delete-button"
               *ngIf="address.id !== null && address.id !== undefined"
               (click)="deleteAddress(address.id)"
             >

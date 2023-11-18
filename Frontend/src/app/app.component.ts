@@ -37,8 +37,8 @@ export class AppComponent implements OnInit {
   };
 
   searchText: string = '';
-  filteredUsers: User[] = [];
-  selectedUser: User | undefined;
+  filteredUsers: any;
+  selectedUser: User | null = null;
   selectedAddress: Address | undefined;
 
   showEditForm: boolean = false;
@@ -49,15 +49,22 @@ export class AppComponent implements OnInit {
     this.loadAddresses();
   }
 
-  showAddModal = false;
-  showAllData = false;
+  showAddUserModal = false;
+  showAddAddressModal = false;
 
-  openAddModal() {
-    this.showAddModal = true;
+  openAddUserModal() {
+    this.showAddUserModal = true;
+  }
+  openAddAddressModal() {
+    this.showAddAddressModal = true;
   }
 
-  closeAddModal() {
-    this.showAddModal = false;
+  closeAddUserModal() {
+    this.showAddUserModal = false;
+    this.resetForm();
+  }
+  closeAddAddressModal() {
+    this.showAddAddressModal = false;
     this.resetForm();
   }
 
@@ -72,21 +79,26 @@ export class AppComponent implements OnInit {
     };
   }
 
-  // onSearch() {
-  //   this.filteredUsers = this.users.filter((user) =>
-  //     user.name.toLowerCase().includes(this.searchText)
-  //   );
-  //   if (this.users.length > 0) {
-  //     this.selectedUser = this.users[0];
-  //   }
-  //   this.showAllData = true;
-  // }
+  onSearchUser() {
+    if (this.searchText) {
+      this.filteredUsers = this.users.filter((i) => {
+        return i.name.toLowerCase().includes(this.searchText.toLowerCase());
+      });
+    } else {
+      this.filteredUsers = [];
+    }
+  }
+
+  clearSearch() {
+    this.searchText = '';
+    this.onSearchUser();
+  }
 
   loadUsers() {
     this.appService.getUsers().subscribe((data: User[]) => {
       this.users = data;
     });
-    this.showAllData = true;
+    this.filteredUsers = [...this.users];
   }
 
   onSubmitUser(form: NgForm) {
@@ -96,7 +108,7 @@ export class AppComponent implements OnInit {
         this.loadUsers();
         this.newUser = { id: null, name: '', email: '', addresses: [] };
         form.resetForm();
-        this.closeAddModal();
+        this.closeAddUserModal();
       });
     } else {
       alert('Please fill all fields');
@@ -123,6 +135,7 @@ export class AppComponent implements OnInit {
     this.appService
       .updateUser(userIdToUpdate, updatedUser)
       .subscribe((response) => {
+        console.log({ response });
         const index = this.users.findIndex((u) => u.id === userIdToUpdate);
         if (index !== -1) {
           this.users[index] = { ...this.users[index], ...updatedUser };
@@ -146,6 +159,7 @@ export class AppComponent implements OnInit {
         this.appService.deleteUser(userId).subscribe(() => {
           this.users = this.users.filter((user) => user.id !== userId);
           this.loadUsers();
+          this.loadAddresses();
           this.showDeletionAlert();
         });
       }
@@ -181,7 +195,7 @@ export class AppComponent implements OnInit {
             country: '',
           };
           form.resetForm();
-          this.closeAddModal();
+          this.closeAddAddressModal();
         });
     } else {
       alert('Please fill all fields');

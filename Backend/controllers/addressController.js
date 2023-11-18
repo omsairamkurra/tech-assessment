@@ -37,7 +37,7 @@ const updateAddress = async(req,res)=>{
     const {id}=req.params
     const {street,city,country,userId}=req.body
     try{
-        const address=await Address.findByPk(id)
+        const address=await Address.findByPk(id,{include:User})
         if(!address){
             return res.status(404).json({error:"Address not found"})
         }
@@ -51,7 +51,7 @@ const updateAddress = async(req,res)=>{
 const deleteAddress =  async(req,res)=>{
     const {id}=req.params
     try{
-        const address=await Address.findByPk(id)
+        const address=await Address.findByPk(id,{include:User})
         if(!address){
             return res.status(404).json({error:"Address not found"})
         }
