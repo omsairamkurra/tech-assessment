@@ -1,0 +1,324 @@
+<div *ngIf="showAddModal">
+  <h2>Add User</h2>
+  <form #userForm="ngForm" (ngSubmit)="onSubmitUser(userForm)">
+    <div>
+      <label for="name">Name:</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        [(ngModel)]="newUser.name"
+        required
+      />
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        [(ngModel)]="newUser.email"
+        required
+      />
+    </div>
+    <div class="buttons">
+      <button class="submit-button" type="submit">Submit</button>
+      <button class="cancel-button" type="button" (click)="closeAddModal()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="showEditForm">
+  <h2>Edit User</h2>
+  <form (ngSubmit)="updateUser(updatedUser)">
+    <div>
+      <label for="name">Name:</label>
+      <input
+        type="text"
+        id="name"
+        [(ngModel)]="updatedUser.name"
+        name="name"
+        required
+      />
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        id="email"
+        [(ngModel)]="updatedUser.email"
+        name="email"
+        required
+      />
+    </div>
+    <div *ngFor="let address of updatedUser.addresses; let i = index">
+      <label for="street{{ i }}">Street {{ i + 1 }}:</label>
+      <input
+        type="text"
+        id="street{{ i }}"
+        [(ngModel)]="address.street"
+        name="street{{ i }}"
+        required
+      />
+    </div>
+    <div *ngFor="let address of updatedUser.addresses; let i = index">
+      <label for="city{{ i }}">city {{ i + 1 }}:</label>
+      <input
+        type="text"
+        id="city{{ i }}"
+        [(ngModel)]="address.city"
+        name="city{{ i }}"
+        required
+      />
+    </div>
+    <div *ngFor="let address of updatedUser.addresses; let i = index">
+      <label for="country{{ i }}">Country {{ i + 1 }}:</label>
+      <input
+        type="text"
+        id="country{{ i }}"
+        [(ngModel)]="address.country"
+        name="country{{ i }}"
+        required
+      />
+    </div>
+    <div class="buttons">
+      <button class="submit-button" type="submit">Update</button>
+      <button class="cancel-button" type="button" (click)="cancelEdit()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class="container">
+  <div class="section">
+    <h2>User Table</h2>
+    <div class="header">
+      <div class="search-container">
+        <input
+          type="search"
+          placeholder="Search user"
+          class="search"
+          [(ngModel)]="searchText"
+        />
+        <!-- <button class="search-enter" (click)="onSearch()">Enter</button> -->
+      </div>
+      <button class="add" (click)="openAddModal()">Add User</button>
+    </div>
+    <table class="data-table" *ngIf="selectedUser && showAllData">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Address</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ selectedUser.id }}</td>
+          <td>{{ selectedUser.name }}</td>
+          <td>{{ selectedUser.email }}</td>
+          <td>
+            <ol>
+              <li *ngFor="let address of selectedUser.addresses">
+                {{ address.street }}, {{ address.city }}, {{ address.country }}
+              </li>
+            </ol>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="data-table" *ngIf="showAllData && !selectedUser">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>Update</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <ol>
+              <li *ngFor="let address of user.addresses">
+                {{ address.street }}, {{ address.city }}, {{ address.country }}
+              </li>
+            </ol>
+          </td>
+          <td>
+            <button (click)="openEditForm(user)">Edit</button>
+          </td>
+          <td>
+            <button
+              *ngIf="user.id !== null && user.id !== undefined"
+              (click)="deleteUser(user.id)"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div *ngIf="showAddModal">
+  <h2>Add Address</h2>
+  <form #addressForm="ngForm" (ngSubmit)="onSubmitAddress(addressForm)">
+    <div>
+      <label for="street">Street:</label>
+      <input
+        type="text"
+        id="street"
+        name="street"
+        [(ngModel)]="newAddress.street"
+        required
+      />
+    </div>
+    <div>
+      <label for="city">City:</label>
+      <input
+        type="text"
+        id="city"
+        name="city"
+        [(ngModel)]="newAddress.city"
+        required
+      />
+    </div>
+    <div>
+      <label for="country">Country:</label>
+      <input
+        type="text"
+        id="country"
+        name="country"
+        [(ngModel)]="newAddress.country"
+        required
+      />
+    </div>
+    <div>
+      <label for="userId">UserId:</label>
+      <input
+        type="number"
+        id="userId"
+        name="userId"
+        [(ngModel)]="newAddress.userId"
+        required
+      />
+    </div>
+    <br />
+    <div class="buttons">
+      <button class="submit-button" type="submit">Submit</button>
+      <button type="button" class="cancel-button" (click)="closeAddModal()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="showEditAddressForm">
+  <h2>Edit Address</h2>
+  <form (ngSubmit)="updateAddress(updatedAddress)">
+    <div>
+      <label for="street">Street:</label>
+      <input
+        type="text"
+        id="street"
+        [(ngModel)]="updatedAddress.street"
+        name="street"
+        required
+      />
+    </div>
+    <div>
+      <label for="city">City:</label>
+      <input
+        type="text"
+        id="city"
+        [(ngModel)]="updatedAddress.city"
+        name="city"
+        required
+      />
+    </div>
+    <div>
+      <label for="country">Country:</label>
+      <input
+        type="text"
+        id="country"
+        [(ngModel)]="updatedAddress.country"
+        name="country"
+        required
+      />
+    </div>
+    <div>
+      <label for="userId">UserId</label>
+      <input
+        type="number"
+        id="userId"
+        [(ngModel)]="updatedAddress.userId"
+        name="userId"
+        required
+      />
+    </div>
+    <div class="buttons">
+      <button class="submit-button" type="submit">Update</button>
+      <button class="cancel-button" type="button" (click)="cancelEditAddress()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class="container">
+  <div class="section">
+    <h2>Address Table</h2>
+    <div class="header">
+      <div class="search-container">
+        <input
+          type="search"
+          placeholder="Search Address"
+          class="search"
+          [(ngModel)]="searchText"
+        />
+        <!-- <button class="search-enter" (click)="onSearchAddress()">Enter</button> -->
+      </div>
+      <button class="add" (click)="openAddModal()">Add Address</button>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Street</th>
+          <th>City</th>
+          <th>Country</th>
+          <th>Update</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let address of addresses">
+          <td>{{ address.id }}</td>
+          <td>{{ address.street }}</td>
+          <td>{{ address.city }}</td>
+          <td>{{ address.country }}</td>
+          <td><button (click)="openEditAddressForm(address)">Edit</button></td>
+          <td>
+            <button
+              *ngIf="address.id !== null && address.id !== undefined"
+              (click)="deleteAddress(address.id)"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
