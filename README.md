@@ -1,16 +1,19 @@
-//Backend
+//Backend:-
+
+
+//Nodejs Package Installation:-
 npm init -y
 
-//Install Packages
+//Install Packages:-    
 npm install express body-parser cors sqlite3 sequelize nodemon
 
-//Backend Server start
+//Backend Server start:-    
 nodemon start
 
 # User-Details
 
-//Install the CLI using the npm package manager
+//Install the CLI using the npm package manager:-    
 npm install -g @angular/cli
 
-//Frontend browser start
+//Frontend browser start:-    
 ng serve
