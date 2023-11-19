@@ -134,12 +134,13 @@
                 </li>
               </ol>
             </td>
-            <td><button (click)="openEditForm(i)">Edit</button></td>
             <td>
-              <button
-                *ngIf="i.id !== null && i.id !== undefined"
-                (click)="deleteUser(i.id)"
-              >
+              <button class="edit-button" (click)="openEditForm(i)">
+                Edit
+              </button>
+            </td>
+            <td>
+              <button class="delete-button" (click)="deleteUser(i)">
                 Delete
               </button>
             </td>
@@ -164,11 +165,7 @@
               </button>
             </td>
             <td>
-              <button
-                class="delete-button"
-                *ngIf="user.id !== null && user.id !== undefined"
-                (click)="deleteUser(user.id)"
-              >
+              <button class="delete-button" (click)="deleteUser(user)">
                 Delete
               </button>
             </td>
@@ -317,11 +314,7 @@
             </button>
           </td>
           <td>
-            <button
-              class="delete-button"
-              *ngIf="address.id !== null && address.id !== undefined"
-              (click)="deleteAddress(address.id)"
-            >
+            <button class="delete-button" (click)="deleteAddress(address)">
               Delete
             </button>
           </td>

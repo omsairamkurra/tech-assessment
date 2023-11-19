@@ -38,8 +38,6 @@ export class AppComponent implements OnInit {
 
   searchText: string = '';
   filteredUsers: any;
-  selectedUser: User | null = null;
-  selectedAddress: Address | undefined;
 
   showEditForm: boolean = false;
   showEditAddressForm: boolean = false;
@@ -69,7 +67,12 @@ export class AppComponent implements OnInit {
   }
 
   resetForm() {
-    this.newUser = { id: null, name: '', email: '', addresses: [] };
+    this.newUser = {
+      id: null,
+      name: '',
+      email: '',
+      addresses: [{ street: '', city: '', country: '' }],
+    };
     this.newAddress = {
       userId: null,
       id: null,
@@ -104,7 +107,7 @@ export class AppComponent implements OnInit {
   onSubmitUser(form: NgForm) {
     if (form.valid) {
       this.appService.addUser(this.newUser).subscribe((addedUser: User) => {
-        this.users.push(this.newUser as User);
+        this.users.push(addedUser);
         this.loadUsers();
         this.newUser = { id: null, name: '', email: '', addresses: [] };
         form.resetForm();
@@ -135,7 +138,6 @@ export class AppComponent implements OnInit {
     this.appService
       .updateUser(userIdToUpdate, updatedUser)
       .subscribe((response) => {
-        console.log({ response });
         const index = this.users.findIndex((u) => u.id === userIdToUpdate);
         if (index !== -1) {
           this.users[index] = { ...this.users[index], ...updatedUser };
@@ -152,8 +154,9 @@ export class AppComponent implements OnInit {
       });
   }
 
-  deleteUser(userId: number): void {
-    if (userId !== undefined && userId !== null) {
+  deleteUser(user: User): void {
+    const userId = user.id;
+    if (userId) {
       const confirmed = confirm(`Are you sure to remove ${userId}`);
       if (confirmed) {
         this.appService.deleteUser(userId).subscribe(() => {
@@ -242,8 +245,9 @@ export class AppComponent implements OnInit {
       });
   }
 
-  deleteAddress(addressId: number): void {
-    if (addressId !== undefined && addressId !== null) {
+  deleteAddress(address: Address): void {
+    const addressId = address.id;
+    if (addressId) {
       const confirmed = confirm(`Are you sure to remove ${addressId}`);
       if (confirmed) {
         this.appService.deleteAddress(addressId).subscribe(() => {

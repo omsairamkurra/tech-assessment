@@ -19,19 +19,6 @@ const getAddresses = async(req,res)=>{
     }
 }
 
-const getAddressById = async (req, res) => {
-    const id = parseInt(req.params.id);
-    try {
-        const address = await Address.findByPk(id);
-        if (!address) {
-            return res.status(404).json({ error: 'Address not found' });
-        }
-        res.json(address);
-    } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-};
-
 
 const updateAddress = async(req,res)=>{
     const {id}=req.params
@@ -65,7 +52,6 @@ const deleteAddress =  async(req,res)=>{
 module.exports={
     createAddress,
     getAddresses,
-    getAddressById,
     updateAddress,
     deleteAddress
 }
