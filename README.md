@@ -1,3 +1,5 @@
+# User-Details
+
 //Backend:-
 
 
@@ -10,7 +12,9 @@ npm install express body-parser cors sqlite3 sequelize nodemon
 //Backend Server start:-    
 nodemon start
 
-# User-Details
+
+//Frontend:-    
+
 
 //Install the CLI using the npm package manager:-    
 npm install -g @angular/cli
